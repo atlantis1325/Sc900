@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SC-900 Practice Exam — Questions 1–100</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#0f0f1a;color:#e0e0e0;min-height:100vh}
+.header{background:#1a1a2e;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #16213e;position:sticky;top:0;z-index:100}
+.header h1{font-size:1.1rem;color:#fff;font-weight:600}
+.timer{font-size:.95rem;color:#a0c4ff;font-weight:500}
+.progress-wrap{background:#16213e;height:6px;width:100%;position:sticky;top:58px;z-index:99}
+.progress-bar{height:100%;background:linear-gradient(90deg,#4361ee,#7209b7);transition:width .3s;width:0%}
+.container{max-width:860px;margin:0 auto;padding:24px 16px 100px}
+.q-card{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:12px;padding:28px 24px;margin-bottom:20px;display:none}
+.q-card.active{display:block}
+.q-number{color:#7b8cde;font-size:.85rem;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.q-text{font-size:1.05rem;line-height:1.6;margin-bottom:20px;color:#fff}
+.q-note{font-size:.85rem;color:#f0a500;margin-bottom:12px;font-style:italic}
+.options label{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;margin-bottom:8px;border:1px solid #2a2a4a;border-radius:8px;cursor:pointer;transition:background .2s,border-color .2s}
+.options label:hover{background:#22224a;border-color:#4361ee}
+.options input[type=radio],.options input[type=checkbox]{margin-top:3px;accent-color:#4361ee;flex-shrink:0}
+.options .opt-text{flex:1}
+/* Hotspot table */
+.hotspot-table{width:100%;border-collapse:collapse;margin-top:8px}
+.hotspot-table th{background:#16213e;padding:10px 14px;text-align:center;font-size:.85rem;color:#a0c4ff;border:1px solid #2a2a4a}
+.hotspot-table td{padding:12px 14px;border:1px solid #2a2a4a;vertical-align:middle}
+.hotspot-table td:not(:first-child){text-align:center;width:70px}
+.hotspot-table tr:nth-child(even){background:#16213e}
+.hotspot-table input[type=radio]{accent-color:#4361ee}
+/* Dropdown */
+.dropdown-sentence{font-size:1.05rem;line-height:2;color:#fff}
+.dropdown-sentence select{background:#16213e;color:#fff;border:1px solid #4361ee;border-radius:6px;padding:6px 10px;font-size:.95rem;cursor:pointer;min-width:180px}
+/* Drag/match */
+.match-table{width:100%;border-collapse:collapse;margin-top:8px}
+.match-table th{background:#16213e;padding:10px 14px;text-align:left;font-size:.85rem;color:#a0c4ff;border:1px solid #2a2a4a}
+.match-table td{padding:12px 14px;border:1px solid #2a2a4a}
+.match-table select{background:#16213e;color:#fff;border:1px solid #4361ee;border-radius:6px;padding:6px 10px;font-size:.95rem;cursor:pointer;width:100%}
+/* Navigation */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;gap:12px;flex-wrap:wrap}
+.nav button{padding:10px 28px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s,transform .1s}
+.nav button:active{transform:scale(.97)}
+.btn-prev{background:#2a2a4a;color:#e0e0e0}
+.btn-prev:hover{background:#3a3a5a}
+.btn-next{background:#4361ee;color:#fff}
+.btn-next:hover{background:#3a51ce}
+.btn-submit{background:#7209b7;color:#fff;padding:12px 36px;font-size:1rem}
+.btn-submit:hover{background:#5c07a0}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.q-counter{color:#7b8cde;font-size:.9rem;font-weight:500}
+/* Results */
+.results-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;overflow-y:auto}
+.results-box{max-width:900px;margin:40px auto;background:#1a1a2e;border-radius:16px;padding:32px 24px;border:1px solid #2a2a4a}
+.results-header{text-align:center;margin-bottom:28px}
+.results-header h2{font-size:1.6rem;color:#fff;margin-bottom:8px}
+.score-big{font-size:3rem;font-weight:700;margin:12px 0}
+.score-pass{color:#00c853}
+.score-fail{color:#ff5252}
+.results-stats{display:flex;justify-content:center;gap:32px;margin-bottom:24px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat .val{font-size:1.4rem;font-weight:700;color:#fff}
+.stat .lbl{font-size:.8rem;color:#7b8cde;margin-top:2px}
+.review-item{background:#0f0f1a;border:1px solid #2a2a4a;border-radius:10px;padding:18px;margin-bottom:14px}
+.review-item.correct{border-left:4px solid #00c853}
+.review-item.wrong{border-left:4px solid #ff5252}
+.review-item.partial{border-left:4px solid #ffa726}
+.review-q{font-weight:600;color:#fff;margin-bottom:8px;font-size:.95rem}
+.review-detail{font-size:.9rem;line-height:1.6;color:#bbb}
+.review-detail .your-ans{color:#ff8a80}
+.review-detail .correct-ans{color:#69f0ae}
+.btn-close-results{background:#4361ee;color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:20px}
+.btn-close-results:hover{background:#3a51ce}
+.review-filter{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.review-filter button{padding:8px 18px;border:1px solid #4361ee;background:transparent;color:#a0c4ff;border-radius:6px;cursor:pointer;font-size:.85rem}
+.review-filter button.active{background:#4361ee;color:#fff}
+/* Post-submit inline coloring */
+.q-card.submitted .options label.opt-correct{background:#0a3d0a;border-color:#00c853}
+.q-card.submitted .options label.opt-wrong{background:#3d0a0a;border-color:#ff5252}
+.q-card.submitted .hotspot-table td.cell-correct{background:#0a3d0a}
+.q-card.submitted .hotspot-table td.cell-wrong{background:#3d0a0a}
+.q-card.submitted .dropdown-sentence select.sel-correct{border-color:#00c853;background:#0a3d0a}
+.q-card.submitted .dropdown-sentence select.sel-wrong{border-color:#ff5252;background:#3d0a0a}
+.q-card.submitted .match-table select.sel-correct{border-color:#00c853;background:#0a3d0a}
+.q-card.submitted .match-table select.sel-wrong{border-color:#ff5252;background:#3d0a0a}
+.explanation{display:none;margin-top:14px;padding:12px;background:#16213e;border-radius:8px;font-size:.9rem;color:#a0c4ff;line-height:1.5}
+.q-card.submitted .explanation{display:block}
+@media(max-width:600px){
+ .header{flex-direction:column;gap:8px;text-align:center}
+ .q-card{padding:18px 14px}
+ .nav{flex-direction:column}
+ .nav button{width:100%}
+ .results-box{margin:16px;padding:20px 14px}
+ .results-stats{gap:16px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+ <h1>SC-900 Practice Exam</h1>
+ <div class="timer" id="timer">00:00:00</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="container" id="quizContainer"></div>
+<div class="results-overlay" id="resultsOverlay">
+ <div class="results-box" id="resultsBox"></div>
+</div>
+
+<script>
+// ─── QUESTION DATA ───
+const questions = [
+{id:1,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["All Azure Active Directory (Azure AD) license editions include the same features.","You can manage an Azure Active Directory (Azure AD) tenant by using the Azure portal.","You must deploy Azure virtual machines to host an Azure Active Directory (Azure AD) tenant."],answers:["No","Yes","No"]},
+{id:2,type:"dropdown",text:'_____ provides best practices from Microsoft employees, partners, and customers, including tools and guidance to assist in an Azure deployment.',blank:"_____",options:["Azure Blueprints","Azure Policy","The Microsoft Cloud Adoption Framework for Azure","A resource lock"],answer:"The Microsoft Cloud Adoption Framework for Azure"},
+{id:3,type:"dropdown",text:'_____ is used to identify, hold, and export electronic information that might be used in an investigation.',blank:"_____",options:["Customer Lockbox","Data loss prevention (DLP)","eDiscovery","A resource lock"],answer:"eDiscovery"},
+{id:4,type:"dropdown",text:'You can manage Microsoft Intune by using the _____',blank:"_____",options:["Azure Active Directory admin center.","Microsoft 365 compliance center.","Microsoft 365 Defender portal.","Microsoft Endpoint Manager admin center."],answer:"Microsoft Endpoint Manager admin center."},
+{id:5,type:"dropdown",text:'Federation is used to establish _____ between organizations.',blank:"_____",options:["multi-factor authentication (MFA)","a trust relationship","user account synchronization","a VPN connection"],answer:"a trust relationship"},
+{id:6,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Applying system updates increases an organization's secure score in Microsoft Defender for Cloud","The secure score in Microsoft Defender for Cloud can evaluate resources across multiple Azure subscriptions","Enabling multi-factor authentication (MFA) increases an organization's secure score in Microsoft Defender for Cloud"],answers:["Yes","Yes","Yes"]},
+{id:7,type:"mcq",text:"Which score measures an organization's progress in completing actions that help reduce risks associated to data protection and regulatory standards?",options:["A. Microsoft Secure Score","B. Productivity Score","C. Secure score in Azure Security Center","D. Compliance score"],answer:"D"},
+{id:8,type:"mcq",text:"What do you use to provide real-time integration between Azure Sentinel and another security source?",options:["A. Azure AD Connect","B. a Log Analytics workspace","C. Azure Information Protection","D. a connector"],answer:"D"},
+{id:9,type:"mcq",text:"Which Microsoft portal provides information about how Microsoft cloud services comply with regulatory standard, such as International Organization for Standardization (ISO)?",options:["A. the Microsoft Endpoint Manager admin center","B. Azure Cost Management + Billing","C. Microsoft Service Trust Portal","D. the Azure Active Directory admin center"],answer:"C"},
+{id:10,type:"mcq",text:"In the shared responsibility model for an Azure deployment, what is Microsoft solely responsible for managing?",options:["A. the management of mobile devices","B. the permissions for the user data stored in Azure","C. the creation and management of user accounts","D. the management of the physical hardware"],answer:"D"},
+{id:11,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Verify explicitly is one of the guiding principles of Zero Trust.","Assume breach is one of the guiding principles of Zero Trust.","The Zero Trust security model assumes that a firewall secures the internal network from external threats."],answers:["Yes","Yes","No"]},
+{id:12,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Control is a key privacy principle of Microsoft.","Transparency is a key privacy principle of Microsoft.","Shared responsibility is a key privacy principle of Microsoft."],answers:["Yes","Yes","No"]},
+{id:13,type:"dropdown",text:'_____ a file makes the data in the file readable and usable to viewers that have the appropriate key.',blank:"_____",options:["Archiving","Compressing","Deduplicating","Encrypting"],answer:"Encrypting"},
+{id:14,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Digitally signing a document requires a private key.","Verifying the authenticity of a digitally signed document requires the public key of the signer.","Verifying the authenticity of a digitally signed document requires the private key of the signer."],answers:["Yes","Yes","No"]},
+{id:15,type:"dropdown",text:'When users sign in to the Azure portal, they are first _____',blank:"_____",options:["assigned permissions.","authenticated.","authorized.","resolved."],answer:"authenticated."},
+{id:16,type:"dropdown",text:'_____ is the process of identifying whether a signed-in user can access a specific resource.',blank:"_____",options:["Authentication","Authorization","Federation","Single sign-on (SSO)"],answer:"Authorization"},
+{id:17,type:"dropdown",text:'_____ enables collaboration with business partners from external organizations such as suppliers, partners, and vendors. External users appear as guest users in the directory.',blank:"_____",options:["Active Directory Domain Services (AD DS)","Active Directory forest trusts","Azure Active Directory (Azure AD) business-to-business (B2B)","Azure Active Directory business-to-consumer B2C (Azure AD B2C)"],answer:"Azure Active Directory (Azure AD) business-to-business (B2B)"},
+{id:18,type:"multi",text:"In the Microsoft Cloud Adoption Framework for Azure, which two phases are addressed before the Ready phase? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. Plan","B. Manage","C. Adopt","D. Govern","E. Define Strategy"],answer:["A","E"],pick:2},
+{id:19,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["In software as a service (SaaS), applying service packs to applications is the responsibility of the organization.","In infrastructure as a service (IaaS), managing the physical network is the responsibility of the cloud provider.","In all Azure cloud deployment types, managing the security of information and data is the responsibility of the organization."],answers:["No","Yes","Yes"]},
+{id:20,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Azure AD Connect can be used to implement hybrid identity.","Hybrid identity requires the implementation of two Microsoft 365 tenants.","Authentication of hybrid identifies requires the synchronization of Active Directory Domain Services (AD DS) and Azure Active Directory (Azure AD)."],answers:["Yes","No","Yes"]},
+{id:21,type:"dropdown",text:'_____ provides benchmark recommendations and guidance for protecting Azure services.',blank:"_____",options:["Azure Application Insights","Azure Network Watcher","Log Analytics workspaces","Security baselines for Azure"],answer:"Security baselines for Azure"},
+{id:22,type:"mcq",text:"What is an example of encryption at rest?",options:["A. encrypting communications by using a site-to-site VPN","B. encrypting a virtual machine disk","C. accessing a website by using an encrypted HTTPS connection","D. sending an encrypted email"],answer:"B"},
+{id:23,type:"multi",text:"Which three statements accurately describe the guiding principles of Zero Trust? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. Define the perimeter by physical locations.","B. Use identity as the primary security boundary.","C. Always verify the permissions of a user explicitly.","D. Always assume that the user system can be breached.","E. Use the network as the primary security boundary."],answer:["B","C","D"],pick:3},
+{id:24,type:"dropdown",text:'Which service should you use to view your Azure secure score?',blank:"_____",options:["Security Center"],answer:"Security Center"},
+{id:25,type:"drag",text:"Match the compliance score action subcategories to the appropriate actions.",matches:[{action:"Encrypt data at rest.",answer:"Preventative"},{action:"Perform a system access audit.",answer:"Detective"},{action:"Make configuration changes in response to a security incident.",answer:"Corrective"}],dragOptions:["Preventative","Detective","Corrective"]},
+{id:26,type:"dropdown",text:'Compliance Manager can be directly accessed from the _____',blank:"_____",options:["Microsoft 365 admin center.","Microsoft 365 Defender portal.","Microsoft 365 Compliance Center","Microsoft Support portal."],answer:"Microsoft 365 Compliance Center"},
+{id:27,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Enabling multi-factor authentication (MFA) increases the Microsoft Secure Score.","A higher Microsoft Secure Score means a lower identified risk level in the Microsoft 365 tenant.","Microsoft Secure Score measures progress in completing actions based on controls that include key regulations and standards for data protection and governance."],answers:["Yes","Yes","Yes"]},
+{id:28,type:"mcq",text:"What can you use to provide a user with a two-hour window to complete an administrative task in Azure?",options:["A. Azure Active Directory (Azure AD) Privileged Identity Management (PIM)","B. Azure Multi-Factor Authentication (MFA)","C. Azure Active Directory (Azure AD) Identity Protection","D. conditional access policies"],answer:"A"},
+{id:29,type:"mcq",text:"In a hybrid identity model, what can you use to sync identities between Active Directory Domain Services (AD DS) and Azure Active Directory (Azure AD)?",options:["A. Active Directory Federation Services (AD FS)","B. Microsoft Sentinel","C. Azure AD Connect","D. Azure AD Privileged Identity Management (PIM)"],answer:"C"},
+{id:30,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["You can create custom roles in Azure Active Directory (Azure AD).","Global administrator is a role in Azure Active Directory (Azure AD).","An Azure Active Directory (Azure AD) user can be assigned only one role."],answers:["Yes","Yes","No"]},
+{id:31,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Azure Active Directory (Azure AD) is deployed to an on-premises environment.","Azure Active Directory (Azure AD) is provided as part of a Microsoft 365 subscription.","Azure Active Directory (Azure AD) is an identity and access management service."],answers:["No","Yes","Yes"]},
+{id:32,type:"dropdown",text:'With Windows Hello for Business, a user\'s biometric data used for authentication _____',blank:"_____",options:["is stored on an external device.","is stored on a local device only.","is stored in Azure Active Directory (Azure AD).","is replicated to all the devices designated by the user."],answer:"is stored on a local device only."},
+{id:33,type:"mcq",text:"What is the purpose of Azure Active Directory (Azure AD) Password Protection?",options:["A. to control how often users must change their passwords","B. to identify devices to which users can sign in without using multi-factor authentication (MFA)","C. to encrypt a password by using globally recognized encryption standards","D. to prevent users from using specific words in their passwords"],answer:"D"},
+{id:34,type:"mcq",text:"Which Azure Active Directory (Azure AD) feature can you use to evaluate group membership and automatically remove users that no longer require membership in a group?",options:["A. access reviews","B. managed identities","C. conditional access policies","D. Azure AD Identity Protection"],answer:"A"},
+{id:35,type:"dropdown",text:'_____ requires additional verification, such as a verification code sent to a mobile phone.',blank:"_____",options:["Multi-factor authentication (MFA)","Pass-through authentication","Password writeback","Single sign-on (SSO)"],answer:"Multi-factor authentication (MFA)"},
+{id:36,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Conditional access policies can use the device state as a signal.","Conditional access policies apply before first-factor authentication is complete.","Conditional access policies can trigger multi-factor authentication (MFA) if a user attempts to access a specific application."],answers:["Yes","No","Yes"]},
+{id:37,type:"dropdown",text:'_____ is a cloud-based solution that leverages on-premises Active Directory signals to identify, detect, and investigate advanced threats.',blank:"_____",options:["Microsoft Defender for Cloud Apps","Microsoft Defender for Endpoint","Microsoft Defender for Identity","Microsoft Defender for Office 365"],answer:"Microsoft Defender for Identity"},
+{id:38,type:"dropdown",text:'Microsoft Defender for Identity can identify advanced threats from _____ signals.',blank:"_____",options:["Azure Active Directory (Azure AD)","Azure AD Connect","on-premises Active Directory Domain Services (AD DS)"],answer:"on-premises Active Directory Domain Services (AD DS)"},
+{id:39,type:"dropdown",text:'Azure Active Directory (Azure AD) is _____ used for authentication and authorization.',blank:"_____",options:["an extended detection and response (XDR) system","an identity provider","a management group","a security information and event management (SIEM) system"],answer:"an identity provider"},
+{id:40,type:"mcq",text:"Which Azure Active Directory (Azure AD) feature can you use to provide just-in-time (JIT) access to manage Azure resources?",options:["A. conditional access policies","B. Azure AD Identity Protection","C. Azure AD Privileged Identity Management (PIM)","D. authentication method policies"],answer:"C"},
+{id:41,type:"multi",text:"Which three authentication methods can be used by Azure Multi-Factor Authentication (MFA)? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. text message (SMS)","B. Microsoft Authenticator app","C. email verification","D. phone call","E. security question"],answer:["A","B","D"],pick:3},
+{id:42,type:"mcq",text:"Which Microsoft 365 feature can you use to restrict communication and the sharing of information between members of two departments at your organization?",options:["A. sensitivity label policies","B. Customer Lockbox","C. information barriers","D. Privileged Access Management (PAM)"],answer:"C"},
+{id:43,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Conditional access policies always enforce the use of multi-factor authentication (MFA).","Conditional access policies can be used to block access to an application based on the location of the user.","Conditional access policies only affect users who have Azure Active Directory (Azure AD)-joined devices."],answers:["No","Yes","No"]},
+{id:44,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Conditional access policies can be applied to global administrators.","Conditional access policies are evaluated before a user is authenticated.","Conditional access policies can use a device platform, such as Android or iOS, as a signal."],answers:["Yes","No","Yes"]},
+{id:45,type:"dropdown",text:'Applications registered in Azure Active Directory (Azure AD) are associated automatically to a _____',blank:"_____",options:["guest account.","managed identity.","service principal.","user account."],answer:"service principal."},
+{id:46,type:"multi",text:"Which three authentication methods does Windows Hello for Business support? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. fingerprint","B. facial recognition","C. PIN","D. email verification","E. security question"],answer:["A","B","C"],pick:3},
+{id:47,type:"dropdown",text:'When you enable security defaults in Azure Active Directory (Azure AD), _____ will be enabled for all Azure AD users.',blank:"_____",options:["Azure AD Identity Protection","Azure AD Privileged Identity Management (PIM)","multi-factor authentication (MFA)"],answer:"multi-factor authentication (MFA)"},
+{id:48,type:"mcq",text:"You have an Azure subscription. You need to implement approval-based, time-bound role activation. What should you use?",options:["A. Windows Hello for Business","B. Azure Active Directory (Azure AD) Identity Protection","C. access reviews in Azure Active Directory (Azure AD)","D. Azure Active Directory (Azure AD) Privileged Identity Management (PIM)"],answer:"D"},
+{id:49,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Global administrators are exempt from conditional access policies","A conditional access policy can add users to Azure Active Directory (Azure AD) roles","Conditional access policies can force the use of multi-factor authentication (MFA) to access cloud apps"],answers:["No","No","Yes"]},
+{id:50,type:"multi",text:"When security defaults are enabled for an Azure Active Directory (Azure AD) tenant, which two requirements are enforced? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. All users must authenticate from a registered device.","B. Administrators must always use Azure Multi-Factor Authentication (MFA).","C. Azure Multi-Factor Authentication (MFA) registration is required for all users.","D. All users must authenticate by using passwordless sign-in.","E. All users must authenticate by using Windows Hello."],answer:["B","C"],pick:2},
+{id:51,type:"mcq",text:"Which type of identity is created when you register an application with Active Directory (Azure AD)?",options:["A. a user account","B. a user-assigned managed identity","C. a system-assigned managed identity","D. a service principal"],answer:"D"},
+{id:52,type:"multi",text:"Which three tasks can be performed by using Azure Active Directory (Azure AD) Identity Protection? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. Configure external access for partner organizations.","B. Export risk detection to third-party utilities.","C. Automate the detection and remediation of identity based-risks.","D. Investigate risks that relate to user authentication.","E. Create and automatically assign sensitivity labels to data."],answer:["B","C","D"],pick:3},
+{id:53,type:"dropdown",text:'When using multi-factor authentication (MFA), a password is considered something you _____.',blank:"_____",options:["are","have","know","share"],answer:"know"},
+{id:54,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Windows Hello for Business can use the Microsoft Authenticator app as an authentication method.","Windows Hello for Business can use a PIN code as an authentication method.","Windows Hello for Business authentication information syncs across all the devices registered by a user."],answers:["No","Yes","No"]},
+{id:55,type:"dropdown",text:'An Azure resource can use a system-assigned _____ to access Azure services.',blank:"_____",options:["Azure Active Directory (Azure AD) joined device","managed identity","service principal","user identity"],answer:"managed identity"},
+{id:56,type:"dropdown",text:'You can use _____ in the Microsoft 365 Defender portal to identify devices that are affected by an alert.',blank:"_____",options:["classifications","incidents","policies","Secure score"],answer:"incidents"},
+{id:57,type:"multi",text:"What are two capabilities of Microsoft Defender for Endpoint? Each correct selection presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. automated investigation and remediation","B. transport encryption","C. shadow IT detection","D. attack surface reduction"],answer:["A","D"],pick:2},
+{id:58,type:"drag",text:"Match the Azure networking service to the appropriate description.",matches:[{action:"Provides Network Address Translation (NAT) services",answer:"Azure Firewall"},{action:"Provides secure and seamless Remote Desktop connectivity to Azure virtual machines",answer:"Azure Bastion"},{action:"Provides traffic filtering that can be applied to specific network interfaces on a virtual network",answer:"Network security group (NSG)"}],dragOptions:["Azure Firewall","Azure Bastion","Network security group (NSG)"]},
+{id:59,type:"dropdown",text:'_____ is a cloud-native security information and event management (SIEM) and security orchestration automated response (SOAR) solution used to provide a single solution for alert detection, threat visibility, proactive hunting, and threat response.',blank:"_____",options:["Azure Advisor","Azure Bastion","Azure Monitor","Azure Sentinel"],answer:"Azure Sentinel"},
+{id:60,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Azure Defender can detect vulnerabilities and threats for Azure Storage.","Cloud Security Posture Management (CSPM) is available for all Azure subscriptions.","Azure Security Center can evaluate the security of workloads deployed to Azure or on-premises."],answers:["Yes","Yes","Yes"]},
+{id:61,type:"dropdown",text:'You can use _____ in the Microsoft 365 security center to view an aggregation of alerts that relate to the same attack.',blank:"_____",options:["Reports","Hunting","Attack simulator","Incidents"],answer:"Incidents"},
+{id:62,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Network security groups (NSGs) can deny inbound traffic from the internet.","Network security groups (NSGs) can deny outbound traffic to the internet.","Network security groups (NSGs) can filter traffic based on IP address, protocol, and port."],answers:["Yes","Yes","Yes"]},
+{id:63,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Microsoft Intune can be used to manage Android devices.","Microsoft Intune can be used to provision Azure subscriptions.","Microsoft Intune can be used to manage organization-owned devices and personal devices."],answers:["Yes","No","Yes"]},
+{id:64,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["You can create one Azure Bastion per virtual network.","Azure Bastion provides secure user connections by using RDP.","Azure Bastion provides a secure connection to an Azure virtual machine by using the Azure portal."],answers:["Yes","Yes","Yes"]},
+{id:65,type:"mcq",text:"What feature in Microsoft Defender for Endpoint provides the first line of defense against cyberthreats by reducing the attack surface?",options:["A. automated remediation","B. automated investigation","C. advanced hunting","D. network protection"],answer:"D"},
+{id:66,type:"dropdown",text:'In Microsoft Sentinel, you can automate common tasks by using _____',blank:"_____",options:["deep investigation tools.","hunting search-and-query tools.","playbooks.","workbooks."],answer:"playbooks."},
+{id:67,type:"multi",text:"Which two types of resources can be protected by using Azure Firewall? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. Azure virtual machines","B. Azure Active Directory (Azure AD) users","C. Microsoft Exchange Online inboxes","D. Azure virtual networks","E. Microsoft SharePoint Online sites"],answer:["A","D"],pick:2},
+{id:68,type:"mcq",text:"You plan to implement a security strategy and place multiple layers of defense throughout a network infrastructure. Which security methodology does this represent?",options:["A. threat modeling","B. identity as the security perimeter","C. defense in depth","D. the shared responsibility model"],answer:"C"},
+{id:69,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Microsoft Defender for Endpoint can protect Android devices.","Microsoft Defender for Endpoint can protect Azure virtual machines that run Windows 10.","Microsoft Defender for Endpoint can protect Microsoft SharePoint Online sites and content from viruses."],answers:["Yes","Yes","No"]},
+{id:70,type:"mcq",text:"What can you use to scan email attachments and forward the attachments to recipients only if the attachments are free from malware?",options:["A. Microsoft Defender for Office 365","B. Microsoft Defender Antivirus","C. Microsoft Defender for Identity","D. Microsoft Defender for Endpoint"],answer:"A"},
+{id:71,type:"mcq",text:"Which feature provides the extended detection and response (XDR) capability of Azure Sentinel?",options:["A. integration with the Microsoft 365 compliance center","B. support for threat hunting","C. integration with Microsoft 365 Defender","D. support for Azure Monitor Workbooks"],answer:"C"},
+{id:72,type:"mcq",text:"What can you use to provide threat detection for Azure SQL Managed Instance?",options:["A. Microsoft Secure Score","B. application security groups","C. Microsoft Defender for Cloud","D. Azure Bastion"],answer:"C"},
+{id:73,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Microsoft Secure Score in the Microsoft 365 security center can provide recommendations for Microsoft Cloud App Security.","From the Microsoft 365 Defender portal, you can view how your Microsoft Secure Score compares to the score of organizations like yours.","Microsoft Secure Score in the Microsoft 365 Defender portal gives you points if you address the improvement action by using a third-party application or software."],answers:["Yes","Yes","Yes"]},
+{id:74,type:"mcq",text:"Which Azure Active Directory (Azure AD) feature can you use to restrict Microsoft Intune-managed devices from accessing corporate resources?",options:["A. network security groups (NSGs)","B. Azure AD Privileged Identity Management (PIM)","C. conditional access policies","D. resource locks"],answer:"C"},
+{id:75,type:"dropdown",text:'_____ can use conditional access policies to control sessions in real time.',blank:"_____",options:["Azure Active Directory (Azure AD) Privileged Identity Management (PIM)","Azure Defender","Azure Sentinel","Microsoft Cloud App Security"],answer:"Microsoft Cloud App Security"},
+{id:76,type:"dropdown",text:'Azure DDoS Protection Standard can be used to protect _____',blank:"_____",options:["Azure Active Directory (Azure AD) applications.","Azure Active Directory (Azure AD) users.","resource groups.","virtual networks."],answer:"virtual networks."},
+{id:77,type:"mcq",text:"What should you use in the Microsoft 365 Defender portal to view security trends and track the protection status of identities?",options:["A. Attack simulator","B. Reports","C. Hunting","D. Incidents"],answer:"B"},
+{id:78,type:"mcq",text:"You have a Microsoft 365 E3 subscription. You plan to audit user activity by using the unified audit log and Basic Audit. For how long will the audit records be retained?",options:["A. 15 days","B. 30 days","C. 90 days","D. 180 days"],answer:"C"},
+{id:79,type:"mcq",text:"To which type of resource can Azure Bastion provide secure access?",options:["A. Azure Files","B. Azure SQL Managed Instances","C. Azure virtual machines","D. Azure App Service"],answer:"C"},
+{id:80,type:"multi",text:"What are three uses of Microsoft Cloud App Security? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. to discover and control the use of shadow IT","B. to provide secure connections to Azure virtual machines","C. to protect sensitive information hosted anywhere in the cloud","D. to provide pass-through authentication to on-premises applications","E. to prevent data leaks to noncompliant apps and limit access to regulated data"],answer:["A","C","E"],pick:3},
+{id:81,type:"dropdown",text:'In the Microsoft 365 Defender portal, an incident is a collection of correlated _____',blank:"_____",options:["alerts","events","vulnerabilities","Microsoft Secure Score improvement actions"],answer:"alerts"},
+{id:82,type:"mcq",text:"You need to connect to an Azure virtual machine by using Azure Bastion. What should you use?",options:["A. PowerShell remoting","B. the Azure portal","C. the Remote Desktop Connection client","D. an SSH client"],answer:"B"},
+{id:83,type:"mcq",text:"Which service includes the Attack simulation training feature?",options:["A. Microsoft Defender for Cloud Apps","B. Microsoft Defender for Identity","C. Microsoft Defender for SQL","D. Microsoft Defender for Office 365"],answer:"D"},
+{id:84,type:"mcq",text:"Which type of alert can you manage from the Microsoft 365 Defender portal?",options:["A. Microsoft Defender for Storage","B. Microsoft Defender for SQL","C. Microsoft Defender for Endpoint","D. Microsoft Defender for IoT"],answer:"C"},
+{id:85,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Microsoft Sentinel data connectors support only Microsoft services.","You can use Azure Monitor workbooks to monitor data collected by Microsoft Sentinel.","Hunting provides you with the ability to identify security threats before an alert is triggered."],answers:["No","Yes","Yes"]},
+{id:86,type:"multi",text:"Which two Azure resources can a network security group (NSG) be associated with? Each correct answer presents a complete solution.",note:"Each correct selection is worth one point.",options:["A. a virtual network subnet","B. a network interface","C. a resource group","D. a virtual network","E. an Azure App Service web app"],answer:["A","B"],pick:2},
+{id:87,type:"mcq",text:"What is a use case for implementing information barrier policies in Microsoft 365?",options:["A. to restrict unauthenticated access to Microsoft 365","B. to restrict Microsoft Teams chats between certain groups within an organization","C. to restrict Microsoft Exchange Online email between certain groups within an organization","D. to restrict data sharing to external email recipients"],answer:"B"},
+{id:88,type:"mcq",text:"What can you use to deploy Azure resources across multiple subscriptions in a consistent manner?",options:["A. Microsoft Defender for Cloud","B. Azure Blueprints","C. Microsoft Sentinel","D. Azure Policy"],answer:"B"},
+{id:89,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["With Advanced Audit in Microsoft 365, you can identify when email items were accessed.","Advanced Audit in Microsoft 365 supports the same retention period of audit logs as core auditing.","Advanced Audit in Microsoft 365 allocates customer-dedicated bandwidth for accessing audit data."],answers:["Yes","No","Yes"]},
+{id:90,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["Azure Active Directory (Azure AD) Identity Protection can add users to groups based on the users' risk level.","Azure Active Directory (Azure AD) Identity Protection can detect whether user credentials were leaked to the public.","Azure Active Directory (Azure AD) Identity Protection can be used to invoke Multi-Factor Authentication based on a user's risk level."],answers:["No","Yes","Yes"]},
+{id:91,type:"mcq",text:"Which Microsoft 365 compliance center feature can you use to identify all the documents on a Microsoft SharePoint Online site that contain a specific key word?",options:["A. Audit","B. Compliance Manager","C. Content Search","D. Alerts"],answer:"C"},
+{id:92,type:"dropdown",text:'_____ provides a central location for managing information protection, information governance, and data loss prevention (DLP) policies.',blank:"_____",options:["Azure Defender","The Microsoft 365 compliance center","The Microsoft Defender portal","Microsoft Endpoint Manager"],answer:"The Microsoft 365 compliance center"},
+{id:93,type:"mcq",text:"Which Microsoft 365 feature can you use to restrict users from sending email messages that contain lists of customers and their associated credit card numbers?",options:["A. retention policies","B. data loss prevention (DLP) policies","C. conditional access policies","D. information barriers"],answer:"B"},
+{id:94,type:"dropdown",text:'_____ can be used to provide Microsoft Support Engineers with access to an organization\'s data stored in Microsoft Exchange Online, SharePoint Online, and OneDrive for Business.',blank:"_____",options:["Customer Lockbox","Information barriers","Privileged Access Management (PAM)","Sensitivity labels"],answer:"Customer Lockbox"},
+{id:95,type:"mcq",text:"In a Core eDiscovery workflow, what should you do before you can search for content?",options:["A. Create an eDiscovery hold.","B. Run Express Analysis.","C. Configure attorney-client privilege detection.","D. Export and download results."],answer:"A"},
+{id:96,type:"mcq",text:"Which Microsoft portal provides information about how Microsoft manages privacy, compliance, and security?",options:["A. Microsoft Service Trust Portal","B. Compliance Manager","C. Microsoft 365 compliance center","D. Microsoft Support"],answer:"A"},
+{id:97,type:"mcq",text:"What can you protect by using the information protection solution in the Microsoft 365 compliance center?",options:["A. computers from zero-day exploits","B. users from phishing attempts","C. files from malware and viruses","D. sensitive data from being exposed to unauthorized users"],answer:"D"},
+{id:98,type:"mcq",text:"What can you specify in Microsoft 365 sensitivity labels?",options:["A. how long files must be preserved","B. when to archive an email message","C. which watermark to add to files","D. where to store files"],answer:"C"},
+{id:99,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["You can use Advanced Audit in Microsoft 365 to view billing details.","You can use Advanced Audit in Microsoft 365 to view the contents of an email message.","You can use Advanced Audit in Microsoft 365 to identify when a user uses the search bar in Outlook on the web to search for items in a mailbox."],answers:["No","No","Yes"]},
+{id:100,type:"hotspot",text:"Select the answer that correctly completes each statement.",statements:["You can add a resource lock to an Azure subscription.","You can add only one resource lock to an Azure resource.","You can delete a resource group containing resources that have resource locks."],answers:["Yes","No","No"]}
+];
+
+// ─── STATE ───
+let current = 0;
+let submitted = false;
+let startTime = Date.now();
+let timerInterval;
+
+// ─── TIMER ───
+function updateTimer(){
+ const d = Math.floor((Date.now()-startTime)/1000);
+ const h = String(Math.floor(d/3600)).padStart(2,'0');
+ const m = String(Math.floor((d%3600)/60)).padStart(2,'0');
+ const s = String(d%60).padStart(2,'0');
+ document.getElementById('timer').textContent = h+':'+m+':'+s;
+}
+timerInterval = setInterval(updateTimer, 1000);
+
+// ─── BUILD QUIZ ───
+function buildQuiz(){
+ const c = document.getElementById('quizContainer');
+ questions.forEach((q,i)=>{
+  const card = document.createElement('div');
+  card.className = 'q-card' + (i===0?' active':'');
+  card.id = 'q'+i;
+  let html = `<div class="q-number">Question ${q.id} of 100</div>`;
+  html += `<div class="q-text">${escHtml(q.text)}</div>`;
+  if(q.note) html += `<div class="q-note">${escHtml(q.note)}</div>`;
+
+  if(q.type==='mcq'){
+   html += '<div class="options">';
+   q.options.forEach((o,j)=>{
+    html += `<label data-letter="${o.charAt(0)}"><input type="radio" name="q${i}" value="${o.charAt(0)}"><span class="opt-text">${escHtml(o)}</span></label>`;
+   });
+   html += '</div>';
+  } else if(q.type==='multi'){
+   html += `<div class="q-note">Select ${q.pick} answer${q.pick>1?'s':''}.</div>`;
+   html += '<div class="options">';
+   q.options.forEach((o,j)=>{
+    html += `<label data-letter="${o.charAt(0)}"><input type="checkbox" name="q${i}" value="${o.charAt(0)}"><span class="opt-text">${escHtml(o)}</span></label>`;
+   });
+   html += '</div>';
+  } else if(q.type==='hotspot'){
+   html += '<table class="hotspot-table"><thead><tr><th style="text-align:left">Statement</th><th>Yes</th><th>No</th></tr></thead><tbody>';
+   q.statements.forEach((s,si)=>{
+    html += `<tr><td>${escHtml(s)}</td><td><input type="radio" name="q${i}s${si}" value="Yes"></td><td><input type="radio" name="q${i}s${si}" value="No"></td></tr>`;
+   });
+   html += '</tbody></table>';
+  } else if(q.type==='dropdown'){
+   const parts = q.text.split('_____');
+   let sel = `<select id="sel_q${i}"><option value="">-- Select --</option>`;
+   q.options.forEach(o=>{ sel += `<option value="${escHtml(o)}">${escHtml(o)}</option>`; });
+   sel += '</select>';
+   html += `<div class="dropdown-sentence">${escHtml(parts[0])}${sel}${parts.length>1?escHtml(parts[1]):''}</div>`;
+  } else if(q.type==='drag'){
+   html += '<table class="match-table"><thead><tr><th>Description / Action</th><th>Answer</th></tr></thead><tbody>';
+   q.matches.forEach((m,mi)=>{
+    let sel = `<select id="drag_q${i}_${mi}"><option value="">-- Select --</option>`;
+    q.dragOptions.forEach(o=>{ sel += `<option value="${escHtml(o)}">${escHtml(o)}</option>`; });
+    sel += '</select>';
+    html += `<tr><td>${escHtml(m.action)}</td><td>${sel}</td></tr>`;
+   });
+   html += '</tbody></table>';
+  }
+
+  html += `<div class="explanation" id="expl_${i}"></div>`;
+
+  card.innerHTML = html;
+  c.appendChild(card);
+ });
+
+ // Nav
+ const nav = document.createElement('div');
+ nav.className = 'nav';
+ nav.innerHTML = `<button class="btn-prev" id="btnPrev" onclick="go(-1)">Previous</button><span class="q-counter" id="qCounter">1 / 100</span><button class="btn-next" id="btnNext" onclick="go(1)">Next</button><button class="btn-submit" id="btnSubmit" onclick="submitQuiz()" style="display:none">Submit Exam</button>`;
+ c.appendChild(nav);
+ updateNav();
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function go(dir){
+ document.getElementById('q'+current).classList.remove('active');
+ current += dir;
+ if(current<0) current=0;
+ if(current>=questions.length) current=questions.length-1;
+ document.getElementById('q'+current).classList.add('active');
+ updateNav();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateNav(){
+ document.getElementById('btnPrev').style.visibility = current===0?'hidden':'visible';
+ document.getElementById('btnNext').style.display = current===questions.length-1?'none':'inline-block';
+ document.getElementById('btnSubmit').style.display = current===questions.length-1&&!submitted?'inline-block':'none';
+ document.getElementById('qCounter').textContent = (current+1)+' / 100';
+ document.getElementById('progressBar').style.width = ((current+1)/questions.length*100)+'%';
+}
+
+// ─── GET USER ANSWERS ───
+function getUserAnswer(i){
+ const q = questions[i];
+ if(q.type==='mcq'){
+  const r = document.querySelector(`input[name="q${i}"]:checked`);
+  return r ? r.value : null;
+ } else if(q.type==='multi'){
+  const checked = document.querySelectorAll(`input[name="q${i}"]:checked`);
+  return Array.from(checked).map(c=>c.value).sort();
+ } else if(q.type==='hotspot'){
+  return q.statements.map((_,si)=>{
+   const r = document.querySelector(`input[name="q${i}s${si}"]:checked`);
+   return r ? r.value : null;
+  });
+ } else if(q.type==='dropdown'){
+  const sel = document.getElementById('sel_q'+i);
+  return sel ? sel.value : null;
+ } else if(q.type==='drag'){
+  return q.matches.map((_,mi)=>{
+   const sel = document.getElementById(`drag_q${i}_${mi}`);
+   return sel ? sel.value : null;
+  });
+ }
+ return null;
+}
+
+// SC-900 Real Exam Scoring: each sub-item scored independently (partial credit)
+function getMaxPoints(i){
+ const q = questions[i];
+ if(q.type==='mcq' || q.type==='dropdown') return 1;
+ if(q.type==='multi') return q.answer.length;
+ if(q.type==='hotspot') return q.answers.length;
+ if(q.type==='drag') return q.matches.length;
+ return 1;
+}
+function getEarnedPoints(i){
+ const q = questions[i];
+ const ua = getUserAnswer(i);
+ if(q.type==='mcq') return ua === q.answer ? 1 : 0;
+ if(q.type==='dropdown') return ua === q.answer ? 1 : 0;
+ if(q.type==='multi'){
+  // Each correct selection = 1 point, each wrong selection = -1 point (min 0)
+  let pts = 0;
+  if(!ua || ua.length===0) return 0;
+  ua.forEach(a=>{ if(q.answer.includes(a)) pts++; else pts--; });
+  return Math.max(0, pts);
+ }
+ if(q.type==='hotspot'){
+  let pts = 0;
+  q.answers.forEach((ca,si)=>{ if(ua[si]===ca) pts++; });
+  return pts;
+ }
+ if(q.type==='drag'){
+  let pts = 0;
+  q.matches.forEach((m,mi)=>{ if(ua[mi]===m.answer) pts++; });
+  return pts;
+ }
+ return 0;
+}
+function isCorrect(i){ return getEarnedPoints(i) === getMaxPoints(i); }
+function isPartial(i){ const e = getEarnedPoints(i); return e > 0 && e < getMaxPoints(i); }
+
+// ─── SUBMIT ───
+function submitQuiz(){
+ if(!confirm('Are you sure you want to submit? You cannot change answers after submission.')) return;
+ submitted = true;
+ clearInterval(timerInterval);
+
+ let totalPoints = 0;
+ let earnedPoints = 0;
+ let fullCorrect = 0;
+ let partialCorrect = 0;
+ const results = [];
+
+ questions.forEach((q,i)=>{
+  const max = getMaxPoints(i);
+  const earned = getEarnedPoints(i);
+  const correct = isCorrect(i);
+  const partial = isPartial(i);
+  totalPoints += max;
+  earnedPoints += earned;
+  if(correct) fullCorrect++;
+  else if(partial) partialCorrect++;
+  results.push({qIndex:i, correct, partial, earned, max});
+
+  const card = document.getElementById('q'+i);
+  card.classList.add('submitted');
+  if(correct) card.style.borderColor='#69f0ae';
+  else if(partial) card.style.borderColor='#ffa726';
+  else card.style.borderColor='#ff5252';
+
+  // Highlight answers
+  if(q.type==='mcq'){
+   card.querySelectorAll('.options label').forEach(lbl=>{
+    const letter = lbl.dataset.letter;
+    if(letter===q.answer) lbl.classList.add('opt-correct');
+    else if(lbl.querySelector('input').checked && letter!==q.answer) lbl.classList.add('opt-wrong');
+   });
+  } else if(q.type==='multi'){
+   card.querySelectorAll('.options label').forEach(lbl=>{
+    const letter = lbl.dataset.letter;
+    if(q.answer.includes(letter)) lbl.classList.add('opt-correct');
+    else if(lbl.querySelector('input').checked && !q.answer.includes(letter)) lbl.classList.add('opt-wrong');
+   });
+  } else if(q.type==='hotspot'){
+   const rows = card.querySelectorAll('.hotspot-table tbody tr');
+   rows.forEach((row,si)=>{
+    const cells = row.querySelectorAll('td');
+    const ua = getUserAnswer(i)[si];
+    const ca = q.answers[si];
+    // Highlight Yes/No cells
+    if(ca==='Yes') cells[1].classList.add('cell-correct');
+    else cells[2].classList.add('cell-correct');
+    if(ua && ua!==ca){
+     if(ua==='Yes') cells[1].classList.add('cell-wrong');
+     else cells[2].classList.add('cell-wrong');
+    }
+   });
+  } else if(q.type==='dropdown'){
+   const sel = document.getElementById('sel_q'+i);
+   if(sel){
+    sel.classList.add(sel.value===q.answer?'sel-correct':'sel-wrong');
+   }
+  } else if(q.type==='drag'){
+   q.matches.forEach((m,mi)=>{
+    const sel = document.getElementById(`drag_q${i}_${mi}`);
+    if(sel) sel.classList.add(sel.value===m.answer?'sel-correct':'sel-wrong');
+   });
+  }
+
+  // Explanation
+  const expl = document.getElementById('expl_'+i);
+  if(correct){
+   expl.innerHTML = `<strong style="color:#69f0ae">Correct! (${earned}/${max} points)</strong>`;
+  } else {
+   let expText = partial ? `<strong style="color:#ffa726">Partial Credit (${earned}/${max} points)</strong><br>` : `<strong style="color:#ff5252">Incorrect (${earned}/${max} points)</strong><br>`;
+   expText += '<strong>Correct answer:</strong> ';
+   if(q.type==='mcq') expText += q.answer + '. ' + (q.options.find(o=>o.startsWith(q.answer))||'');
+   else if(q.type==='multi') expText += q.answer.join(', ');
+   else if(q.type==='hotspot') expText += q.answers.map((a,si)=>q.statements[si].substring(0,60)+'... = '+a).join('<br>');
+   else if(q.type==='dropdown') expText += q.answer;
+   else if(q.type==='drag') expText += q.matches.map(m=>m.action.substring(0,50)+'... = '+m.answer).join('<br>');
+   expl.innerHTML = expText;
+  }
+
+  // Disable inputs
+  card.querySelectorAll('input,select').forEach(el=>el.disabled=true);
+ });
+
+ // Show results overlay
+ showResults(earnedPoints, totalPoints, fullCorrect, partialCorrect, results);
+ updateNav();
+}
+
+function showResults(earnedPoints, totalPoints, fullCorrect, partialCorrect, results){
+ const pct = Math.round(earnedPoints/totalPoints*100);
+ const pass = pct >= 70;
+ const elapsed = document.getElementById('timer').textContent;
+ const wrong = questions.length - fullCorrect - partialCorrect;
+
+ let html = `<div class="results-header"><h2>Exam Complete</h2><div class="score-big ${pass?'score-pass':'score-fail'}">${pct}%</div><div style="color:${pass?'#69f0ae':'#ff8a80'};font-size:1.1rem;font-weight:600;margin-bottom:8px">${pass?'PASSED':'FAILED'} (passing score: 70%)</div></div>`;
+ html += `<div class="results-stats"><div class="stat"><div class="val">${earnedPoints}/${totalPoints}</div><div class="lbl">Points Earned</div></div><div class="stat"><div class="val">${fullCorrect}</div><div class="lbl">Fully Correct</div></div><div class="stat"><div class="val">${partialCorrect}</div><div class="lbl">Partial Credit</div></div><div class="stat"><div class="val">${wrong}</div><div class="lbl">Incorrect</div></div><div class="stat"><div class="val">${elapsed}</div><div class="lbl">Time</div></div></div>`;
+ html += `<p style="text-align:center;color:#a0c4ff;font-size:.85rem;margin:8px 0 16px">Scoring: Each sub-item (hotspot statement, multi-select choice, drag-drop match) is scored independently like the real SC-900 exam.</p>`;
+
+ html += `<div class="review-filter"><button class="active" onclick="filterReview('all',this)">All (${questions.length})</button><button onclick="filterReview('wrong',this)">Incorrect (${wrong})</button><button onclick="filterReview('partial',this)">Partial (${partialCorrect})</button><button onclick="filterReview('correct',this)">Correct (${fullCorrect})</button></div>`;
+
+ html += '<div id="reviewList">';
+ results.forEach(r=>{
+  const q = questions[r.qIndex];
+  const ua = getUserAnswer(r.qIndex);
+  let detail = '';
+  if(q.type==='mcq'){
+   const correctOpt = q.options.find(o=>o.startsWith(q.answer)) || q.answer;
+   detail = r.correct ? `<span class="correct-ans">Your answer: ${correctOpt}</span>` : `<span class="your-ans">Your answer: ${ua||'(none)'}</span> | <span class="correct-ans">Correct: ${correctOpt}</span>`;
+  } else if(q.type==='multi'){
+   detail = r.correct ? `<span class="correct-ans">Your answers: ${ua.join(', ')}</span>` : `<span class="your-ans">Your answers: ${ua.join(', ')||'(none)'}</span> | <span class="correct-ans">Correct: ${q.answer.join(', ')}</span>`;
+  } else if(q.type==='hotspot'){
+   detail = q.statements.map((s,si)=>{
+    const uv = ua[si]||'(none)';
+    const cv = q.answers[si];
+    return `${s.substring(0,80)}... &rarr; ${uv===cv?'<span class="correct-ans">'+uv+'</span>':'<span class="your-ans">'+uv+'</span> (correct: <span class="correct-ans">'+cv+'</span>)'}`;
+   }).join('<br>');
+  } else if(q.type==='dropdown'){
+   detail = r.correct ? `<span class="correct-ans">${q.answer}</span>` : `<span class="your-ans">Your answer: ${ua||'(none)'}</span> | <span class="correct-ans">Correct: ${q.answer}</span>`;
+  } else if(q.type==='drag'){
+   detail = q.matches.map((m,mi)=>{
+    const uv = ua[mi]||'(none)';
+    return `${m.action.substring(0,60)}... &rarr; ${uv===m.answer?'<span class="correct-ans">'+m.answer+'</span>':'<span class="your-ans">'+uv+'</span> (correct: <span class="correct-ans">'+m.answer+'</span>)'}`;
+   }).join('<br>');
+  }
+  const resClass = r.correct?'correct':r.partial?'partial':'wrong';
+  const ptsLabel = r.max>1?` <span style="color:#a0c4ff;font-size:.8rem">(${r.earned}/${r.max} pts)</span>`:'';
+  html += `<div class="review-item ${resClass}" data-result="${resClass}"><div class="review-q">Q${q.id}: ${escHtml(q.text.substring(0,120))}${q.text.length>120?'...':''}${ptsLabel}</div><div class="review-detail">${detail}</div></div>`;
+ });
+ html += '</div>';
+
+ html += `<div style="text-align:center"><button class="btn-close-results" onclick="closeResults()">Review Questions</button></div>`;
+
+ document.getElementById('resultsBox').innerHTML = html;
+ document.getElementById('resultsOverlay').style.display = 'block';
+}
+
+function filterReview(type, btn){
+ document.querySelectorAll('.review-filter button').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ document.querySelectorAll('.review-item').forEach(item=>{
+  if(type==='all') item.style.display='block';
+  else item.style.display = item.dataset.result===type?'block':'none';
+ });
+}
+
+function closeResults(){
+ document.getElementById('resultsOverlay').style.display='none';
+ current=0;
+ document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('active'));
+ document.getElementById('q0').classList.add('active');
+ updateNav();
+}
+
+// ─── INIT ───
+buildQuiz();
+</script>
+</body>
+</html>
